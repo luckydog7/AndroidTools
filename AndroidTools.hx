@@ -15,7 +15,7 @@ class AndroidTools {
 	
 	
 	#if android
-	private static var request_permissions_jni = JNI.createStaticMethod ("org.haxe.extension.Tools", "requestPermissions", "([Ljava/lang/String;I)V");
+	private static var request_permissions_jni = JNI.createStaticMethod ("org.haxe.extension.AndroidTools", "requestPermissions", "([Ljava/lang/String;I)V");
 	#end
 	
 }
