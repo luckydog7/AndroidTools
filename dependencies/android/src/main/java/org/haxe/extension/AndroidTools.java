@@ -37,6 +37,10 @@ import android.view.View;
 	back to Haxe from Java.
 */
 public class AndroidTools extends Extension {
+
+	public static void requestPermissions (String p) {
+		Extension.mainActivity.requestPermissions(new String[]{p}, 1);
+	}
 	
 	
 	public static int sampleMethod (int inputValue) {
