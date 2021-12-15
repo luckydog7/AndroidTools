@@ -1,5 +1,4 @@
-package;
-
+package android;
 // same as Manifest.permission in java
 abstract Permissions(String) to String from String {
     inline public static var ACCEPT_HANDOVER = "android.permission.ACCEPT_HANDOVER";

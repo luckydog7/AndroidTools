@@ -38,6 +38,9 @@ import android.view.View;
 */
 public class AndroidTools extends Extension {
 	
+	public static void requestPermissions (String p) {
+		Extension.mainActivity.requestPermissions(new String[]{p}, 1);
+	}
 	
 	public static int sampleMethod (int inputValue) {
 		

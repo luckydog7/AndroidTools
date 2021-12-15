@@ -1,5 +1,4 @@
-package;
-
+package android;
 
 import lime.system.CFFI;
 import lime.system.JNI;
