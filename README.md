@@ -1,2 +1,0 @@
-# AndroidTools
-extension for haxe
