@@ -10,15 +10,15 @@ class AndroidTools {
 		#end
 	}
 
-	public static function getGrantedPermissions(appPackage:String):Array<Permissions> {
+	public static function getGrantedPermissions():Array<Permissions> {
 		#if android
-		return getGrantedPermissions_jni(appPackage);
+		return getGrantedPermissions_jni();
 		#end
 		return null;
 	}
 
 	#if android
 	private static var request_permissions_jni = JNI.createStaticMethod("org.haxe.extension.AndroidTools", "requestPermissions", "([Ljava/lang/String;I)V");
-	private static var getGrantedPermissions_jni = JNI.createStaticMethod("org.haxe.extension.AndroidTools", "getGrantedPermissions", "(Ljava/lang/String;)[Ljava/lang/String;");
+	private static var getGrantedPermissions_jni = JNI.createStaticMethod("org.haxe.extension.AndroidTools", "getGrantedPermissions", "()[Ljava/lang/String;");
 	#end
 }
