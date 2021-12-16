@@ -8,6 +8,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import java.util.ArrayList;
+import java.util.List;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 
 
 /* 
@@ -40,6 +44,21 @@ public class AndroidTools extends Extension {
 
 	public static void requestPermissions (String p[], int reqcode) {
 		Extension.mainActivity.requestPermissions(p, reqcode);
+	}
+
+	// source https://stackoverflow.com/questions/37294242/how-to-get-all-granted-permissions-of-a-app
+	public static String[] getGrantedPermissions(String appPackage) {
+		List<String> granted = new ArrayList<String>();
+		try {
+			PackageInfo pi = Extension.mainContext.getPackageManager().getPackageInfo(appPackage, PackageManager.GET_PERMISSIONS);
+			for (int i = 0; i < pi.requestedPermissions.length; i++) {
+				if ((pi.requestedPermissionsFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
+					granted.add(pi.requestedPermissions[i]);
+				}
+			}
+		} catch (Exception e) {
+		}
+		return granted.toArray(new String[granted.size()]);
 	}
 	
 	
