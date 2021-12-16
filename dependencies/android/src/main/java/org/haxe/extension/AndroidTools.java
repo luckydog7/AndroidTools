@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 
 
 /* 
@@ -59,6 +60,13 @@ public class AndroidTools extends Extension {
 		} catch (Exception e) {
 		}
 		return granted.toArray(new String[granted.size()]);
+	}
+
+	public static void openFileManager(String action, String dir, String type, String title){
+		Intent intent = new Intent(action);
+		Uri uri = Uri.parse(dir);
+		intent.setDataAndType(uri, type);
+		Extension.mainActivity.startActivity(Intent.createChooser(intent, title));
 	}
 	
 	
