@@ -6,7 +6,7 @@ extension for haxe (in dev lol)
 AndroidTools.requestPermission(Permissions.READ_EXTERNAL_STORAGE);
 
 // to get granted permissions(string) array use this
-AndroidTools.getGrantedPermissions("com.nfghfgh.ffghfgh");
+AndroidTools.getGrantedPermissions();
 
 
 ```
