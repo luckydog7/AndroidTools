@@ -7,12 +7,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.widget.Toast;
+import android.os.Environment;
 
 
 /* 
@@ -44,7 +49,15 @@ import android.net.Uri;
 public class AndroidTools extends Extension {
 
 	public static void requestPermissions (String p[], int reqcode) {
-		Extension.mainActivity.requestPermissions(p, reqcode);
+		try {
+			Extension.mainActivity.requestPermissions(p, reqcode);
+		} catch (Exception e){
+			Log.e("AndroidTools", e.toString());
+		}
+	}
+
+	public static String getExternalStorageDirectory(){
+		return Environment.getExternalStorageDirectory().getPath();
 	}
 
 	// source https://stackoverflow.com/questions/37294242/how-to-get-all-granted-permissions-of-a-app
@@ -58,15 +71,28 @@ public class AndroidTools extends Extension {
 				}
 			}
 		} catch (Exception e) {
+			Log.e("AndroidTools", e.toString());
 		}
 		return granted.toArray(new String[granted.size()]);
 	}
 
 	public static void openFileManager(String action, String dir, String type, String title){
-		Intent intent = new Intent(action);
-		Uri uri = Uri.parse(dir);
-		intent.setDataAndType(uri, type);
-		Extension.mainActivity.startActivity(Intent.createChooser(intent, title));
+		try {
+			Intent intent = new Intent(action);
+			Uri uri = Uri.parse(dir);
+			intent.setDataAndType(uri, type);
+			Extension.mainActivity.startActivity(Intent.createChooser(intent, title));
+		}catch (Exception e){
+			Log.e("AndroidTools", e.toString());
+		}
+	}
+
+	public static void toast(String text, int duration){
+		try {
+			Toast.makeText(Extension.mainContext, text, duration).show();
+		}catch (Exception e){
+			Log.e("AndroidTools", e.toString());
+		}
 	}
 	
 	

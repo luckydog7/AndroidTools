@@ -10,6 +10,12 @@ class AndroidTools {
 		#end
 	}
 
+	public static function requestPermissions(perm:Array<Permissions>) {
+		#if android
+		request_permissions_jni(perm, 1);
+		#end
+	}
+
 	public static function getGrantedPermissions():Array<Permissions> {
 		#if android
 		return getGrantedPermissions_jni();
@@ -24,9 +30,29 @@ class AndroidTools {
 		return null;
 	}
 
+	// short dur - 0, long dur - 1
+	public static function toast(text:String, duration:Int = 0) {
+		#if android
+		return toast_jni(text, duration);
+		#end
+		return null;
+	}
+
+	// try do not use this
+	public static function getExternalStorageDirectory():String {
+		#if android
+		return getExternalStorageDirectory_jni();
+		#end
+		return null;
+	}
+
 	#if android
 	private static var request_permissions_jni = JNI.createStaticMethod("org.haxe.extension.AndroidTools", "requestPermissions", "([Ljava/lang/String;I)V");
 	private static var getGrantedPermissions_jni = JNI.createStaticMethod("org.haxe.extension.AndroidTools", "getGrantedPermissions", "()[Ljava/lang/String;");
-	private static var openFileManager_jni = JNI.createStaticMethod("org.haxe.extension.AndroidTools", "openFileManager", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+	private static var openFileManager_jni = JNI.createStaticMethod("org.haxe.extension.AndroidTools", "openFileManager",
+		"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+	private static var toast_jni = JNI.createStaticMethod("org.haxe.extension.AndroidTools", "toast", "(Ljava/lang/String;I)V");
+	private static var getExternalStorageDirectory_jni = JNI.createStaticMethod("org.haxe.extension.AndroidTools", "getExternalStorageDirectory",
+		"()Ljava/lang/String;");
 	#end
 }
