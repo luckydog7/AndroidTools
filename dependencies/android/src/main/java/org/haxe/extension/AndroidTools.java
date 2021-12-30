@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
@@ -18,6 +19,11 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.widget.Toast;
 import android.os.Environment;
+
+import com.google.gson.Gson;
+
+import org.haxe.lime.HaxeObject;
+import java.lang.Object;
 
 
 /* 
@@ -47,6 +53,7 @@ import android.os.Environment;
 	back to Haxe from Java.
 */
 public class AndroidTools extends Extension {
+	public static Gson gson = new Gson();
 
 	public static void requestPermissions (String p[], int reqcode) {
 		try {
@@ -58,6 +65,13 @@ public class AndroidTools extends Extension {
 
 	public static String getExternalStorageDirectory(){
 		return Environment.getExternalStorageDirectory().getPath();
+	}
+
+	public static void goToSettings() {
+		Intent myAppSettings = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + Extension.packageName));
+		myAppSettings.addCategory(Intent.CATEGORY_DEFAULT);
+		myAppSettings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		Extension.mainActivity.startActivityForResult(myAppSettings, 168);
 	}
 
 	// source https://stackoverflow.com/questions/37294242/how-to-get-all-granted-permissions-of-a-app
@@ -76,12 +90,12 @@ public class AndroidTools extends Extension {
 		return granted.toArray(new String[granted.size()]);
 	}
 
-	public static void openFileManager(String action, String dir, String type, String title){
+	public static void openFileManager(String action, String dir, String type, String title, int reqcode){
 		try {
 			Intent intent = new Intent(action);
 			Uri uri = Uri.parse(dir);
 			intent.setDataAndType(uri, type);
-			Extension.mainActivity.startActivity(Intent.createChooser(intent, title));
+			Extension.mainActivity.startActivityForResult(Intent.createChooser(intent, title), reqcode);
 		}catch (Exception e){
 			Log.e("AndroidTools", e.toString());
 		}
@@ -94,12 +108,39 @@ public class AndroidTools extends Extension {
 			Log.e("AndroidTools", e.toString());
 		}
 	}
-	
+
+	public static void installapk(String path){
+		try {
+			File file1 = new File(path);
+			Uri contentUri1 = Uri.fromFile(file1);
+			Intent intent = new Intent(Intent.ACTION_VIEW, contentUri1);
+			intent.setDataAndType(contentUri1, "application/vnd.android.package-archive");
+			intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+			Extension.mainActivity.startActivity(intent);
+		}catch (Exception e) {
+			Log.e("AndroidTools", e.toString());
+		}
+	}
+
+	public static HaxeObject callback;
+
+	public static void setCallback(final HaxeObject _callback) {
+		callback = _callback;
+	}
 	
 	public static int sampleMethod (int inputValue) {
 		
 		return inputValue * 100;
 		
+	}
+
+	public static String objectToJson(Object obj){
+		try {
+			return gson.toJson(obj);
+		}catch (Exception e){
+			Log.d("AndroidTools", e.toString());
+			return "{}";
+		}
 	}
 	
 	
@@ -109,7 +150,7 @@ public class AndroidTools extends Extension {
 	 * from it.
 	 */
 	public boolean onActivityResult (int requestCode, int resultCode, Intent data) {
-		
+		callback.call("onActivityResult", new Object[] {requestCode, resultCode, data});
 		return true;
 		
 	}
@@ -118,7 +159,7 @@ public class AndroidTools extends Extension {
 	 * Called when the activity receives th results for permission requests.
 	 */
 	public boolean onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-
+		callback.call("onRequestPermissionsResult", new Object[] {requestCode, permissions, grantResults});
 		return true;
 
 	}
